@@ -1,6 +1,6 @@
 # PAIcom Command Generator
 
-A GUI tool for creating animation command files and voice commands for PAIcom. Features a modern dark-themed interface with drag-and-drop functionality, image previews, and audio playback testing.
+A GUI tool for creating animation command files and voice commands for PAIcom. Features drag-and-drop functionality, image previews, and audio playback testing.
 
 ## Features
 
@@ -23,11 +23,6 @@ A GUI tool for creating animation command files and voice commands for PAIcom. F
 - **Custom Animations** - Toggle custom animation support (ON/OFF)
 - **Custom Commands** - Toggle custom command support (ON/OFF)
 - **Animation Type** - Switch between PNG/GIF format preference
-
-### Dark Mode Interface
-- Modern dark theme throughout
-- Easy on the eyes for extended editing sessions
-- Professional appearance
 
 ## Installation & Usage
 
