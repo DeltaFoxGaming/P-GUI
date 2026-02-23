@@ -1,0 +1,41 @@
+# Build artifacts (PyInstaller)
+build/
+dist/
+*.spec.bak
+*.manifest
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# User data directories
+animations/
+audio/
+custom-commands/
+files/
+
+# User-generated content (except requirements.txt)
+*.txt
+!requirements.txt
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+
+# PyInstaller cache
+*.toc
