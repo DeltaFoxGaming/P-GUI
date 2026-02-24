@@ -137,7 +137,7 @@ If you want to modify and rebuild:
 
 ## License
 
-[Choose a license - MIT recommended]
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Credits
 
