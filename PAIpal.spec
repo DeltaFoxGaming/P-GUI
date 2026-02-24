@@ -5,7 +5,7 @@ a = Analysis(
     ['PAIpal.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('PAIpal-icon.ico', '.')],
     hiddenimports=['PIL', 'PIL.Image', 'PIL.ImageTk', 'winsound'],
     hookspath=[],
     hooksconfig={},
@@ -35,4 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon='PAIpal-icon.ico',
 )

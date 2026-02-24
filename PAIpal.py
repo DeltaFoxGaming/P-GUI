@@ -19,7 +19,7 @@ except ImportError:
 # [AI-NOTE] Helper to get executable path for browse dialogs
 def get_base_path():
     if getattr(sys, 'frozen', False):
-        return os.path.dirname(sys.executable)
+        return sys._MEIPASS  # PyInstaller temp folder for bundled files
     return os.path.dirname(os.path.abspath(__file__))
 
 # [AI-NOTE] Main Application Class
@@ -28,6 +28,12 @@ class App:
         self.root = root
         self.root.title("PAIpal")
         self.root.geometry("700x750")
+        
+        # Set window icon
+        icon_path = os.path.join(get_base_path(), "PAIpal-icon.ico")
+        if os.path.exists(icon_path):
+            self.root.iconbitmap(icon_path)
+        
         self.base_width = 700
         self.expanded_width = 1400
         
