@@ -134,7 +134,7 @@ If you want to modify and rebuild:
 
 ## Credits
 
-Created for the PAIcom community.
+Created by DeltaFoxGaming for the PAIcom community.
 
 ## Support
 
