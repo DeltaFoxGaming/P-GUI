@@ -2,6 +2,13 @@
 
 A GUI tool for creating animation command files and voice commands for PAIcom. Features drag-and-drop functionality, image previews, and audio playback testing.
 
+## NOTICE
+
+Place PAIpal.exe or PAIpal.py in the root folder for PAIcom
+"/PAIcom (furry computer assistant)" for best results
+
+Otherwise this will create its own "animations, audio, file" folders to reference.
+
 ## Features
 
 ### Animation/Text Command Editor
