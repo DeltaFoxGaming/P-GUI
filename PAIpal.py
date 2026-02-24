@@ -16,8 +16,14 @@ try:
 except ImportError:
     AUDIO_AVAILABLE = False
 
-# [AI-NOTE] Helper to get executable path for browse dialogs
+# [AI-NOTE] Helper to get executable path for browse dialogs and working directories
 def get_base_path():
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)  # Folder where .exe is placed
+    return os.path.dirname(os.path.abspath(__file__))
+
+# [AI-NOTE] Helper to get bundled resource path (for icon, etc.)
+def get_resource_path():
     if getattr(sys, 'frozen', False):
         return sys._MEIPASS  # PyInstaller temp folder for bundled files
     return os.path.dirname(os.path.abspath(__file__))
@@ -30,7 +36,7 @@ class App:
         self.root.geometry("700x750")
         
         # Set window icon
-        icon_path = os.path.join(get_base_path(), "PAIpal-icon.ico")
+        icon_path = os.path.join(get_resource_path(), "PAIpal-icon.ico")
         if os.path.exists(icon_path):
             self.root.iconbitmap(icon_path)
         
@@ -122,7 +128,9 @@ class App:
         self.show_editor()
 
     def edit_file(self):
-        path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
+        animations_dir = os.path.join(get_base_path(), "animations")
+        os.makedirs(animations_dir, exist_ok=True)
+        path = filedialog.askopenfilename(initialdir=animations_dir, filetypes=[("Text Files", "*.txt")])
         if path:
             try:
                 with open(path, "r") as f:
