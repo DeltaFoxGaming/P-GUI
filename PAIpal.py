@@ -26,7 +26,7 @@ def get_base_path():
 class App:
     def __init__(self, root):
         self.root = root
-        self.root.title("Command Generator")
+        self.root.title("PAIpal")
         self.root.geometry("700x750")
         self.base_width = 700
         self.expanded_width = 1400
@@ -169,7 +169,7 @@ class App:
         top_frame.pack(fill=tk.X)
 
         # Helper to create button rows
-        def create_cmd_row(parent, btn_text, label_text, cmd_func, needs_input=False, input_label=None, browse_dir=None):
+        def create_cmd_row(parent, btn_text, label_text, cmd_func, needs_input=False, input_label=None, browse_dir=None, tooltip_text=None):
             row = tk.Frame(parent, bg=self.bg_dark)
             row.pack(fill=tk.X, pady=2)
             
@@ -192,6 +192,17 @@ class App:
                     browse_btn.pack(side=tk.LEFT, padx=5)
             
             tk.Label(row, text=label_text, fg=self.fg_gray, bg=self.bg_dark).pack(side=tk.LEFT, padx=10)
+            
+            # Add tooltip if provided
+            if tooltip_text:
+                tooltip_label = tk.Label(row, text="?", bg=self.bg_dark, fg=self.fg_gray,
+                                        font=("Arial", 9), cursor="hand2")
+                tooltip_label.pack(side=tk.LEFT, padx=(3, 0))
+                
+                # Bind tooltip events
+                tooltip_label.bind("<Enter>", lambda e: self.show_blank_line_tooltip(e, tooltip_text))
+                tooltip_label.bind("<Leave>", lambda e: self.hide_blank_line_tooltip())
+            
             return entry
 
         # 1. HIDE_ALL
@@ -220,7 +231,7 @@ class App:
         
         # 7. Blank Line
         create_cmd_row(top_frame, "Blank Line", "inserts a blank line", 
-                      lambda: self.add_command("BLANK"))
+                      lambda: self.add_command("BLANK"), tooltip_text="These lines will get skipped/ignored and are just for organizing but you dont have to use them or whatever idk im not your dad lolz")
 
         # [AI-NOTE] Filename Entry Section
         filename_frame = tk.Frame(self.text_panel, padx=10, pady=5, bg=self.bg_dark)
@@ -626,25 +637,38 @@ class App:
         # Empty space for delete button area
         tk.Label(header_frame, text="", bg=self.bg_dark).grid(row=0, column=0, sticky="w")
         
-        # Phrase label
-        tk.Label(header_frame, text="Phrase", bg=self.bg_dark, fg=self.fg_gray, 
-                font=("Arial", 9)).grid(row=0, column=1, sticky="w", padx=(5, 0))
+        # Phrase label with tooltip
+        phrase_label_frame = tk.Frame(header_frame, bg=self.bg_dark)
+        phrase_label_frame.grid(row=0, column=1, sticky="w", padx=(5, 0))
         
-        # File label with tooltip - perfectly aligned with filename column
-        file_label_frame = tk.Frame(header_frame, bg=self.bg_dark)
-        file_label_frame.grid(row=0, column=2, sticky="w")
-        
-        tk.Label(file_label_frame, text="File", bg=self.bg_dark, fg=self.fg_gray,
+        tk.Label(phrase_label_frame, text="Phrase", bg=self.bg_dark, fg=self.fg_gray, 
                 font=("Arial", 9)).pack(side=tk.LEFT)
         
-        # Tooltip question mark
-        tooltip_label = tk.Label(file_label_frame, text="?", bg=self.bg_dark, fg=self.fg_gray,
+        # Phrase tooltip question mark
+        phrase_tooltip_label = tk.Label(phrase_label_frame, text="?", bg=self.bg_dark, fg=self.fg_gray,
                                 font=("Arial", 9), cursor="hand2")
-        tooltip_label.pack(side=tk.LEFT, padx=(3, 0))
+        phrase_tooltip_label.pack(side=tk.LEFT, padx=(3, 0))
         
-        # Bind tooltip events
-        tooltip_label.bind("<Enter>", lambda e: self.show_file_tooltip(e))
-        tooltip_label.bind("<Leave>", lambda e: self.hide_file_tooltip())
+        # Bind phrase tooltip events
+        phrase_tooltip_label.bind("<Enter>", lambda e: self.show_phrase_tooltip(e))
+        phrase_tooltip_label.bind("<Leave>", lambda e: self.hide_phrase_tooltip())
+        
+        # Divider
+        tk.Label(phrase_label_frame, text=" | ", bg=self.bg_dark, fg=self.fg_gray,
+                font=("Arial", 9)).pack(side=tk.LEFT, padx=(3, 3))
+        
+        # File label with tooltip
+        tk.Label(phrase_label_frame, text="File", bg=self.bg_dark, fg=self.fg_gray,
+                font=("Arial", 9)).pack(side=tk.LEFT)
+        
+        # File tooltip question mark
+        file_tooltip_label = tk.Label(phrase_label_frame, text="?", bg=self.bg_dark, fg=self.fg_gray,
+                                font=("Arial", 9), cursor="hand2")
+        file_tooltip_label.pack(side=tk.LEFT, padx=(3, 0))
+        
+        # Bind file tooltip events
+        file_tooltip_label.bind("<Enter>", lambda e: self.show_file_tooltip(e))
+        file_tooltip_label.bind("<Leave>", lambda e: self.hide_file_tooltip())
         
         self.voice_list_widget = VoiceCommandsListFrame(voice_list_container, self.voice_commands, self.on_voice_update, self)
         self.voice_list_widget.pack(fill=tk.BOTH, expand=True)
@@ -658,6 +682,25 @@ class App:
         """Called when voice commands are updated"""
         self.voice_commands = new_voice_commands
     
+    def show_phrase_tooltip(self, event):
+        """Show tooltip explaining the Phrase field"""
+        self.phrase_tooltip = tk.Toplevel(self.root)
+        self.phrase_tooltip.wm_overrideredirect(True)
+        self.phrase_tooltip.wm_geometry(f"+{event.x_root+10}+{event.y_root+10}")
+        
+        label = tk.Label(self.phrase_tooltip,
+                        text="This field is for the spoken words that\ntrigger the .txt file call in the field to the right.\n\nTIP: Use phonetic spelling for tricky words\n(e.g., GPT → gi bi ti).",
+                        background="#ffffcc", foreground="#000000",
+                        relief=tk.SOLID, borderwidth=1, padx=8, pady=5,
+                        font=("Arial", 9), justify=tk.LEFT)
+        label.pack()
+    
+    def hide_phrase_tooltip(self):
+        """Hide the phrase tooltip"""
+        if hasattr(self, 'phrase_tooltip'):
+            self.phrase_tooltip.destroy()
+            del self.phrase_tooltip
+    
     def show_file_tooltip(self, event):
         """Show tooltip explaining the File field"""
         self.file_tooltip = tk.Toplevel(self.root)
@@ -665,7 +708,7 @@ class App:
         self.file_tooltip.wm_geometry(f"+{event.x_root+10}+{event.y_root+10}")
         
         label = tk.Label(self.file_tooltip,
-                        text="This field specifies which .txt file\ngets called when the phrase\nto the left is spoken.",
+                        text="This field specifies which .txt file\ngets called when the phrase is spoken.",
                         background="#ffffcc", foreground="#000000",
                         relief=tk.SOLID, borderwidth=1, padx=8, pady=5,
                         font=("Arial", 9), justify=tk.LEFT)
@@ -676,6 +719,25 @@ class App:
         if hasattr(self, 'file_tooltip'):
             self.file_tooltip.destroy()
             del self.file_tooltip
+    
+    def show_blank_line_tooltip(self, event, tooltip_text):
+        """Show tooltip for blank line"""
+        self.blank_line_tooltip = tk.Toplevel(self.root)
+        self.blank_line_tooltip.wm_overrideredirect(True)
+        self.blank_line_tooltip.wm_geometry(f"+{event.x_root+10}+{event.y_root+10}")
+        
+        label = tk.Label(self.blank_line_tooltip,
+                        text=tooltip_text,
+                        background="#ffffcc", foreground="#000000",
+                        relief=tk.SOLID, borderwidth=1, padx=8, pady=5,
+                        font=("Arial", 9), justify=tk.LEFT)
+        label.pack()
+    
+    def hide_blank_line_tooltip(self):
+        """Hide the blank line tooltip"""
+        if hasattr(self, 'blank_line_tooltip'):
+            self.blank_line_tooltip.destroy()
+            del self.blank_line_tooltip
 
 
 # [AI-NOTE] Custom Widget for Drag-and-Drop List
@@ -725,7 +787,7 @@ class DraggableListFrame(tk.Frame):
         row = tk.Frame(self.scrollable_frame, bd=1, relief=tk.RAISED, bg=self.app.bg_secondary)
         row.pack(fill=tk.X, pady=1, anchor="n")
         
-        display_text = text if text != "" else "[Blank Line]"
+        display_text = text if text != "" else "_______________"
         
         # Delete Button (add first so it's on the right)
         del_btn = tk.Button(row, text="Delete", fg="#ff4444", bg=self.app.bg_input, 

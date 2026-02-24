@@ -1,4 +1,4 @@
-# PAIcom Command Generator
+# PAIpal
 
 A GUI tool for creating animation command files and voice commands for PAIcom. Features drag-and-drop functionality, image previews, and audio playback testing.
 
@@ -28,7 +28,7 @@ A GUI tool for creating animation command files and voice commands for PAIcom. F
 
 ### Option 1: Pre-built Executable (Recommended)
 
-1. Download `gui_generator_v3.exe` from [Releases](../../releases)
+1. Download `PAIpal.exe` from [Releases](../../releases)
 2. Run the .exe - no installation needed!
 3. The app will create necessary folders (`animations/`, `audio/`, `custom-commands/`, `files/`)
 
@@ -51,7 +51,7 @@ cd GUI
 pip install -r requirements.txt
 
 # Run the application
-python gui_generator_v3.py
+python PAIpal.py
 ```
 
 ### Option 3: Build Your Own Executable
@@ -61,7 +61,7 @@ python gui_generator_v3.py
 pip install pyinstaller
 
 # Build the .exe
-pyinstaller gui_generator_v3.spec
+pyinstaller PAIpal.spec
 
 # Find your executable in the dist/ folder
 ```

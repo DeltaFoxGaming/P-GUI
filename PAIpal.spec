@@ -1,8 +1,8 @@
-﻿# -*- mode: python ; coding: utf-8 -*-
+# -*- mode: python ; coding: utf-8 -*-
 
 
 a = Analysis(
-    ['gui_generator_v3.py'],
+    ['PAIpal.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='gui_generator_v3',
+    name='PAIpal',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
